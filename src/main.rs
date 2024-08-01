@@ -214,7 +214,7 @@ fn main() {
         .unwrap_or("/media/rustvids/slabs/code/src/main.rs".to_string());
 
     let code = read_to_string(&path).unwrap();
-    let spans = syntax::highlight(&code);
+    let spans = syntax::highlight(&code, "rs");
     let mut instructions = insts(spans);
 
     let mut doc = Document::new("@main");

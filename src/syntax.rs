@@ -40,7 +40,7 @@ pub struct Line<'a> {
     pub tail: Box<[Span<'a>]>,
 }
 
-pub fn highlight<'a>(src: &'a str) -> Box<[Line<'a>]> {
+pub fn highlight<'a>(src: &'a str, ext: &str) -> Box<[Line<'a>]> {
     let ps = SyntaxSet::load_defaults_newlines();
     let ts = ThemeSet::load_defaults();
     let theme = ThemeSet::get_theme("themes/custom.stTheme").unwrap();
@@ -48,7 +48,7 @@ pub fn highlight<'a>(src: &'a str) -> Box<[Line<'a>]> {
     // let ts = ThemeSet::load_defaults();
     // let theme = &ts.themes["base16-eighties.dark"];
 
-    let syntax = ps.find_syntax_by_extension("rs").unwrap();
+    let syntax = ps.find_syntax_by_extension(ext).unwrap();
     let mut h = HighlightLines::new(syntax, &theme);
 
     let mut output = vec![];
