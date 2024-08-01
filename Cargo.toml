@@ -1,0 +1,9 @@
+[package]
+name = "scammed"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anathema = { version = "0.3.0", path = "../anathema" }
+rand = "0.8.5"
+syntect = "5.2.0"

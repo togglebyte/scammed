@@ -1,0 +1,25 @@
+vstack
+    @status { waiting: waiting }
+
+    expand
+        hstack
+            border [sides: "right"]
+                expand [axis: "vertical"]
+                    padding [padding: 1]
+                        vstack
+                            text [foreground: "cyan"] "../"
+                            text [foreground: "cyan"] "src/"
+                            text [bold: true] "> main.rs"
+                            text  "Cargo.toml"
+            overflow
+                for line in lines
+                    // The container keeps the row from being zero sized
+                    container [min-width: 1, min-height: 1]
+                        text
+                            for span in line.spans
+                                span [foreground: span.foreground] span.text
+
+                position [left: screen_cursor_x, top: screen_cursor_y]
+                    container [background: "black", foreground: "green", height: 1, width: 1, inverse: true]
+
+    @footer {x: screen_cursor_x + 1, y: screen_cursor_y + 1 }

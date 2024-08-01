@@ -1,0 +1,31 @@
+Instruction::Type('f')
+Instruction::Newline
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type('e')
+Instruction::Newline
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type('e')
+Instruction::Newline
+Instruction::Newline
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type('4')
+Instruction::Newline
+Instruction::Newline
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type(' ')
+Instruction::Type('e')
+Instruction::Type(';')
+Instruction::Newline
+Instruction::Type('}')
+Instruction::Newline

@@ -1,0 +1,9 @@
+let STATE = {
+    "true": "red",
+    "false": "white"
+}
+
+hstack [background: "black", foreground: "white"]
+    text "== [" path "] == "
+    spacer
+    text [foreground: STATE[waiting]] "▝"

@@ -1,0 +1,3 @@
+hstack [background: "grey", foreground: "black"]
+    text x ", " y
+    spacer
