@@ -33,7 +33,7 @@ impl<'a> Parser<'a> {
                 }
             }
 
-            let (count, src) = line.head.take_space();
+            let (count, src, bold) = line.head.take_space();
             if let Some(x) = count {
                 self.instructions.push(Instruction::SetX(x));
                 line_start = x;
@@ -42,11 +42,11 @@ impl<'a> Parser<'a> {
             }
 
             self.set_foreground(&line.head);
-            self.push_chars(src, line_start);
+            self.push_chars(src, bold, line_start);
 
             for span in &*line.tail {
                 self.set_foreground(span);
-                self.push_chars(span.src, line_start);
+                self.push_chars(span.src, span.bold, line_start);
             }
         }
 
@@ -59,11 +59,12 @@ impl<'a> Parser<'a> {
             self.foreground = span.fg;
         }
     }
-    fn push_chars(&mut self, src: &str, line_start: i32) {
+
+    fn push_chars(&mut self, src: &str, bold: bool, line_start: i32) {
         for c in src.chars() {
             match c {
                 '\n' => self.instructions.push(Instruction::Newline { x: line_start }),
-                c => self.instructions.push(Instruction::Type(c)),
+                c => self.instructions.push(Instruction::Type(c, bold)),
             }
         }
     }

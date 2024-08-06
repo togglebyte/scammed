@@ -17,7 +17,7 @@ vstack
                     container [min-width: 1, min-height: 1]
                         text
                             for span in line.spans
-                                span [foreground: span.foreground] span.text
+                                span [foreground: span.foreground, bold: span.bold] span.text
 
                 position [left: screen_cursor_x, top: screen_cursor_y]
                     container [background: "black", foreground: "green", height: 1, width: 1, inverse: true]

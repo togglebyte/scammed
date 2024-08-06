@@ -31,14 +31,16 @@ impl Line {
 #[derive(State)]
 struct Span {
     text: Value<char>,
+    bold: Value<bool>,
     foreground: Value<Hex>,
 }
 
 impl Span {
-    pub fn new(c: char, foreground: Hex) -> Self {
+    pub fn new(c: char, foreground: Hex, bold: bool) -> Self {
         Self {
             text: c.into(),
             foreground: foreground.into(),
+            bold: bold.into(),
         }
     }
 
@@ -46,6 +48,7 @@ impl Span {
         Self {
             text: ' '.into(),
             foreground: Hex::from((255, 255, 255)).into(),
+            bold: false.into(),
         }
     }
 }
@@ -145,22 +148,20 @@ impl Editor {
                     self.cursor.y = y as i32;
                     self.update_cursor(doc, vp, size);
                 }
-                Instruction::Type(c) => {
+                Instruction::Type(c, bold) => {
                     {
                         let mut lines = doc.lines.to_mut();
                         let line = lines.get_mut(self.cursor.y as usize).unwrap();
                         let mut line = line.to_mut();
                         let spans = line.spans.len();
                         line.spans
-                            .insert(self.cursor.x as usize, Span::new(c, self.foreground));
+                            .insert(self.cursor.x as usize, Span::new(c, self.foreground, bold));
                         self.cursor.x += 1;
                     }
 
                     self.update_cursor(doc, vp, size);
                 }
-                Instruction::SetForeground(hex) => { 
-                    self.foreground = hex
-                },
+                Instruction::SetForeground(hex) => self.foreground = hex,
                 Instruction::Newline { x } => {
                     self.cursor.x = x;
                     self.cursor.y += 1;
@@ -211,7 +212,7 @@ fn main() {
     let path = std::env::args()
         .skip(1)
         .next()
-        .unwrap_or("/media/rustvids/slabs/code/src/main.rs".to_string());
+        .unwrap_or("/home/togglebit/temp/fib/src/bin/cache.rs".to_string());
 
     let code = read_to_string(&path).unwrap();
     let spans = syntax::highlight(&code, "rs");
@@ -257,6 +258,7 @@ fn main() {
 
             use rand::Rng;
             let sleep = rand::thread_rng().gen_range(35..85);
+            let sleep = rand::thread_rng().gen_range(3..5);
             std::thread::sleep(Duration::from_millis(sleep));
             emitter.emit(cid, i);
         }

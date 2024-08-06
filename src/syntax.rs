@@ -13,7 +13,7 @@ pub struct Span<'a> {
 }
 
 impl<'a> Span<'a> {
-    pub fn take_space(&self) -> (Option<i32>, &str) {
+    pub fn take_space(&self) -> (Option<i32>, &str, bool) {
         let count = self.src.bytes().take_while(|b| *b == b' ').count();
         
 
@@ -22,7 +22,7 @@ impl<'a> Span<'a> {
             n => Some(n as i32),
         };
 
-        (opt_count, &self.src[count..])
+        (opt_count, &self.src[count..], self.bold)
     }
 }
 
