@@ -19,7 +19,8 @@ vstack
                             for span in line.spans
                                 span [foreground: span.foreground, bold: span.bold] span.text
 
-                position [left: screen_cursor_x, top: screen_cursor_y]
-                    container [background: "black", foreground: "green", height: 1, width: 1, inverse: true]
+                    position [left: screen_cursor_x, top: screen_cursor_y]
+                        if show_cursor
+                            container [background: "black", foreground: "green", height: 1, width: 1, inverse: true]
 
     @footer {x: screen_cursor_x + 1, y: screen_cursor_y + 1 }

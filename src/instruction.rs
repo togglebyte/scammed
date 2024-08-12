@@ -9,4 +9,5 @@ pub enum Instruction {
     SetX(i32),
     Pause(u64),
     Wait,
+    HideCursor,
 }

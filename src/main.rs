@@ -62,12 +62,13 @@ struct Doc {
     buf_cursor_y: Value<i32>,
     lines: Value<List<Line>>,
     current_instruction: Value<Option<String>>,
-    path: Value<String>,
+    title: Value<String>,
     waiting: Value<String>,
+    show_cursor: Value<bool>,
 }
 
 impl Doc {
-    pub fn new(path: String) -> Self {
+    pub fn new(title: String) -> Self {
         Self {
             doc_height: 1.into(),
             screen_cursor_x: 0.into(),
@@ -76,8 +77,9 @@ impl Doc {
             buf_cursor_y: 0.into(),
             lines: List::from_iter(vec![Line::empty()]),
             current_instruction: None.into(),
-            path: path.into(),
+            title: title.into(),
             waiting: false.to_string().into(),
+            show_cursor: true.into(),
         }
     }
 }
@@ -173,6 +175,9 @@ impl Editor {
                 }
                 Instruction::Pause(_) => unreachable!(),
                 Instruction::Wait => doc.waiting.set(true.to_string()),
+                Instruction::HideCursor => {
+                    doc.show_cursor.set(false);
+                }
             }
         });
     }
@@ -205,17 +210,22 @@ impl Component for Editor {
 }
 
 fn insts(lines: Box<[syntax::Line<'_>]>) -> Vec<Instruction> {
-    parse::Parser::new(lines).instructions()
+    let mut instructions = parse::Parser::new(lines).instructions();
+    instructions.pop();
+    instructions.insert(0, Instruction::Pause(1000));
+    // instructions.push(Instruction::HideCursor);
+    instructions
 }
 
 fn main() {
-    let path = std::env::args()
-        .skip(1)
-        .next()
-        .unwrap_or("/home/togglebit/temp/fib/src/bin/cache.rs".to_string());
+    let mut args = std::env::args().skip(1);
+    let path = args.next().unwrap();
+
+    let ext = path.rfind(".").unwrap();
+    let ext = &path[ext + 1..];
 
     let code = read_to_string(&path).unwrap();
-    let spans = syntax::highlight(&code, "rs");
+    let spans = syntax::highlight(&code, ext);
     let mut instructions = insts(spans);
 
     let mut doc = Document::new("@main");
@@ -229,13 +239,15 @@ fn main() {
 
     let mut runtime = Runtime::new(doc, backend);
 
+    let title = args.next().unwrap();
+
     let (tx, rx) = mpsc::channel();
     let cid = runtime
         .register_component(
             "main",
             "components/index.aml",
             Editor::new(tx),
-            Doc::new(path),
+            Doc::new(title),
         )
         .unwrap();
     runtime.register_component("status", "components/status.aml", (), ());
@@ -258,7 +270,7 @@ fn main() {
 
             use rand::Rng;
             let sleep = rand::thread_rng().gen_range(35..85);
-            let sleep = rand::thread_rng().gen_range(3..5);
+            // let sleep = rand::thread_rng().gen_range(3..5);
             std::thread::sleep(Duration::from_millis(sleep));
             emitter.emit(cid, i);
         }

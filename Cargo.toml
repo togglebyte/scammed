@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anathema = { version = "0.3.0", path = "../anathema" }
+anathema = { git = "https://github.com/togglebyte/anathema/", branch = "dev" }
 rand = "0.8.5"
 syntect = "5.2.0"
